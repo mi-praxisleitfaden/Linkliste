@@ -437,7 +437,7 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
 </section>
 
 
-  <div class="filterbar" id="filterbar"><button class="chip active">Alle</button><button class="chip">Organisation</button><button class="chip">Planung und Räume</button><button class="chip">Pädagogik und Zeugnis</button><button class="chip">Unterricht und ICT</button><button class="chip">Regionale Informationen</button><button class="chip">Aktuell</button></div>
+  <div class="filterbar" id="filterbar"><button class="chip active">Alle</button><button class="chip">Organisation</button><button class="chip">Planung und Räume</button><button class="chip">Pädagogik und Zeugnis</button><button class="chip">Unterricht und ICT</button><button class="chip">Regionale Informationen</button><button class="chip">Aktuell</button><button class="chip">Formulare</button></div>
   <section class="grid" id="linkGrid"><article class="category">
       <div class="category-head">
         <div class="category-icon">▦</div>
@@ -634,6 +634,20 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
         <div class="link-tools">
           <button class="icon-btn edit" title="Bearbeiten">✎</button>
           <button class="icon-btn delete" title="Löschen">⌫</button>
+        </div></li></ul></article><article class="category">
+      <div class="category-head">
+        <div class="category-icon">◇</div>
+        <div><h3>Formulare</h3><p></p></div>
+      </div>
+      <ul class="link-list"><li class="link-item">
+        <div class="link-badge">X</div>
+        <div class="link-main">
+          <a href="https://ksabch.sharepoint.com/sites/KSABOSStock666/_layouts/15/Doc.aspx?sourcedoc=%7B9AD40159-2181-48E2-8C9E-090F18AA9B66%7D&amp;file=R%C3%BCckerstattung%20Barauslagen.xlsx&amp;action=default&amp;mobileredirect=true&amp;DefaultItemOpen=1" target="_blank" rel="noopener noreferrer">Rückerstattung Barauslagen</a>
+          <small>https://ksabch.sharepoint.com/sites/KSABOSStock666/_layouts/15/Doc.aspx?sourcedoc=%7B9AD40159-2181-48E2-8C9E-090F18AA9B66%7D&amp;file=R%C3%BCckerstattung%20Barauslagen.xlsx&amp;action=default&amp;mobileredirect=true&amp;DefaultItemOpen=1</small>
+        </div>
+        <div class="link-tools">
+          <button class="icon-btn edit" title="Bearbeiten">✎</button>
+          <button class="icon-btn delete" title="Löschen">⌫</button>
         </div></li></ul></article></section>
   <div class="empty" id="emptyState" style="display: none;">Keine passenden Links gefunden.</div>
 
@@ -656,11 +670,11 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
       <div class="form-grid">
         <div class="field full">
           <label for="categoryManagerSelect">Kategorie</label>
-          <select id="categoryManagerSelect" name="categoryManagerSelect"></select>
+          <select id="categoryManagerSelect" name="categoryManagerSelect"><option value="__new__">＋ Neue Kategorie</option><option value="organisation">Organisation</option><option value="planung">Planung und Räume</option><option value="personal">Pädagogik und Zeugnis</option><option value="unterricht">Unterricht und ICT</option><option value="region">Regionale Informationen</option><option value="aktuell">Aktuell</option></select>
         </div>
         <div class="field full">
           <label for="categoryTitle">Titel</label>
-          <input id="categoryTitle" name="categoryTitle" required placeholder="z. B. Schulentwicklung">
+          <input id="categoryTitle" name="categoryTitle" required="" placeholder="z. B. Schulentwicklung">
         </div>
         <div class="field full">
           <label for="categorySubtitle">Kurzbeschreibung</label>
@@ -682,7 +696,7 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
 <dialog id="linkDialog">
   <form method="dialog" id="linkForm">
     <div class="modal-head">
-      <h3 id="dialogTitle">Link bearbeiten</h3>
+      <h3 id="dialogTitle">Link hinzufügen</h3>
       <button class="icon-btn" value="cancel" aria-label="Schliessen">✕</button>
     </div>
     <div class="modal-body">
@@ -697,7 +711,7 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
         </div>
         <div class="field">
           <label for="category">Bereich</label>
-          <select id="category" name="category"><option value="organisation">Organisation</option><option value="planung">Planung und Räume</option><option value="personal">Pädagogik und Zeugnis</option><option value="unterricht">Unterricht und ICT</option><option value="region">Regionale Informationen</option><option value="aktuell">Aktuell</option></select>
+          <select id="category" name="category"><option value="organisation">Organisation</option><option value="planung">Planung und Räume</option><option value="personal">Pädagogik und Zeugnis</option><option value="unterricht">Unterricht und ICT</option><option value="region">Regionale Informationen</option><option value="aktuell">Aktuell</option><option value="formulare">Formulare</option></select>
         </div>
         <div class="field">
           <label for="type">Typ</label>
@@ -762,6 +776,12 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
       "title": "Aktuell",
       "subtitle": "Neuigkeiten und häufig verwendete Inhalte",
       "icon": "◷"
+    },
+    {
+      "id": "formulare",
+      "title": "Formulare",
+      "subtitle": "",
+      "icon": "◇"
     }
   ],
   "links": [
@@ -915,6 +935,14 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
       "url": "https://ksabch.sharepoint.com/:b:/s/KSAB-Dokumente2/IQDne_pCR7KwQaF2rV-TGIyfAUFC-RDqZYuhXRO3fHBzvsw?e=F9gFYN",
       "category": "unterricht",
       "type": "pdf",
+      "description": ""
+    },
+    {
+      "id": "l1786090379646",
+      "title": "Rückerstattung Barauslagen",
+      "url": "https://ksabch.sharepoint.com/sites/KSABOSStock666/_layouts/15/Doc.aspx?sourcedoc=%7B9AD40159-2181-48E2-8C9E-090F18AA9B66%7D&file=R%C3%BCckerstattung%20Barauslagen.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1",
+      "category": "formulare",
+      "type": "excel",
       "description": ""
     }
   ]
