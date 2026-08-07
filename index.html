@@ -363,6 +363,17 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
   justify-content:flex-end;
   gap:8px;
 }
+.category-manager-note{
+  margin:0 0 14px;
+  color:var(--muted);
+  font-size:.9rem;
+}
+.category-empty{
+  padding:18px 16px;
+  color:var(--muted);
+  font-size:.9rem;
+  background:#fbfcfd;
+}
 @media(max-width:1000px){
   .site-header:before{width:220px;height:108px;opacity:.16;right:12px;top:18px}
   .toolbar-inner{grid-template-columns:1fr}
@@ -411,6 +422,7 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
       <span>⌕</span>
     </div>
     <div class="actions">
+      <button class="btn" id="categoryBtn">▦ <span>Kategorien</span></button>
       <button class="btn" id="exportBtn" title="Aktualisierte HTML-Datei speichern">↓ <span>HTML speichern</span></button>
       <button class="btn btn-primary" id="addBtn">＋ <span>Link hinzufügen</span></button>
     </div>
@@ -627,11 +639,45 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
 
   <section class="help">
     <h3>Pflege der Seite</h3>
-    <p>Über «Link hinzufügen» oder das Stiftsymbol werden Einträge geändert. «HTML speichern» erzeugt eine neue, vollständige Datei mit allen Änderungen.</p>
+    <p>Über «Link hinzufügen» oder das Stiftsymbol werden Einträge geändert. Über «Kategorien» lassen sich neue Kategorien anlegen und bestehende Kategorien bearbeiten. «HTML speichern» erzeugt eine neue, vollständige Datei mit allen Änderungen.</p>
     <p>Die neue Datei ersetzt anschliessend die bisherige Datei auf dem gewählten Webspeicher.</p>
     <div class="notice">Änderungen sind bis zum Speichern nur in diesem Browser vorhanden. Für die gemeinsame Nutzung muss die neu gespeicherte HTML-Datei wieder veröffentlicht werden.</div>
   </section>
 </main>
+
+<dialog id="categoryDialog">
+  <form method="dialog" id="categoryForm">
+    <div class="modal-head">
+      <h3>Kategorie hinzufügen oder bearbeiten</h3>
+      <button class="icon-btn" value="cancel" aria-label="Schliessen">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="category-manager-note">Bestehende Kategorie auswählen oder «Neue Kategorie» wählen.</p>
+      <div class="form-grid">
+        <div class="field full">
+          <label for="categoryManagerSelect">Kategorie</label>
+          <select id="categoryManagerSelect" name="categoryManagerSelect"></select>
+        </div>
+        <div class="field full">
+          <label for="categoryTitle">Titel</label>
+          <input id="categoryTitle" name="categoryTitle" required placeholder="z. B. Schulentwicklung">
+        </div>
+        <div class="field full">
+          <label for="categorySubtitle">Kurzbeschreibung</label>
+          <input id="categorySubtitle" name="categorySubtitle" placeholder="z. B. Projekte, Konzepte und Arbeitsgruppen">
+        </div>
+        <div class="field">
+          <label for="categoryIcon">Symbol</label>
+          <input id="categoryIcon" name="categoryIcon" maxlength="4" placeholder="z. B. ◇">
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" value="cancel">Abbrechen</button>
+      <button class="btn btn-primary" id="categorySaveBtn" value="default">Kategorie speichern</button>
+    </div>
+  </form>
+</dialog>
 
 <dialog id="linkDialog">
   <form method="dialog" id="linkForm">
@@ -893,6 +939,13 @@ const dialog = document.getElementById('linkDialog');
 const form = document.getElementById('linkForm');
 const categorySelect = document.getElementById('category');
 
+const categoryDialog = document.getElementById('categoryDialog');
+const categoryForm = document.getElementById('categoryForm');
+const categoryManagerSelect = document.getElementById('categoryManagerSelect');
+const categoryTitle = document.getElementById('categoryTitle');
+const categorySubtitle = document.getElementById('categorySubtitle');
+const categoryIcon = document.getElementById('categoryIcon');
+
 function escapeHtml(value=''){
   return value.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 }
@@ -924,6 +977,52 @@ function renderCategoryOptions(){
     `<option value="${escapeHtml(c.id)}">${escapeHtml(c.title)}</option>`
   ).join('');
 }
+
+function renderCategoryManagerOptions(selected='__new__'){
+  categoryManagerSelect.innerHTML =
+    `<option value="__new__">＋ Neue Kategorie</option>` +
+    portal.categories.map(c =>
+      `<option value="${escapeHtml(c.id)}">${escapeHtml(c.title)}</option>`
+    ).join('');
+  categoryManagerSelect.value = selected;
+}
+
+function slugifyCategory(title){
+  let base = title
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-+|-+$/g,'') || 'kategorie';
+  let id = base;
+  let n = 2;
+  while(portal.categories.some(c => c.id === id)){
+    id = base + '-' + n++;
+  }
+  return id;
+}
+
+function loadCategoryManager(){
+  const id = categoryManagerSelect.value;
+  if(id === '__new__'){
+    categoryTitle.value = '';
+    categorySubtitle.value = '';
+    categoryIcon.value = '◇';
+    categoryTitle.focus();
+    return;
+  }
+  const cat = portal.categories.find(c => c.id === id);
+  if(!cat) return;
+  categoryTitle.value = cat.title || '';
+  categorySubtitle.value = cat.subtitle || '';
+  categoryIcon.value = cat.icon || '◇';
+}
+
+function openCategoryManager(){
+  renderCategoryManagerOptions('__new__');
+  loadCategoryManager();
+  categoryDialog.showModal();
+}
 function render(){
   renderFilters();
   const query=searchInput.value.trim().toLowerCase();
@@ -937,8 +1036,8 @@ function render(){
       const hay=(link.title+' '+(link.description||'')+' '+cat.title).toLowerCase();
       return !query || hay.includes(query);
     });
-    if(!links.length) return;
-    shown += links.length;
+    if(!links.length && activeCategory==='all') return;
+    shown += links.length || 1;
 
     const section=document.createElement('article');
     section.className='category';
@@ -949,6 +1048,13 @@ function render(){
       </div>
       <ul class="link-list"></ul>`;
     const list=section.querySelector('.link-list');
+
+    if(!links.length){
+      const empty=document.createElement('li');
+      empty.className='category-empty';
+      empty.textContent='Noch keine Links in dieser Kategorie.';
+      list.appendChild(empty);
+    }
 
     links.forEach(link=>{
       const li=document.createElement('li');
@@ -1020,6 +1126,42 @@ form.addEventListener('submit',e=>{
 });
 searchInput.addEventListener('input',render);
 document.getElementById('addBtn').onclick=openAdd;
+document.getElementById('categoryBtn').onclick=openCategoryManager;
+
+categoryManagerSelect.addEventListener('change', loadCategoryManager);
+
+categoryForm.addEventListener('submit', e=>{
+  e.preventDefault();
+
+  const title = categoryTitle.value.trim();
+  const subtitle = categorySubtitle.value.trim();
+  const icon = categoryIcon.value.trim() || '◇';
+  if(!title) return;
+
+  const selectedId = categoryManagerSelect.value;
+
+  if(selectedId === '__new__'){
+    const newCategory = {
+      id: slugifyCategory(title),
+      title,
+      subtitle,
+      icon
+    };
+    portal.categories.push(newCategory);
+    activeCategory = newCategory.id;
+  }else{
+    const cat = portal.categories.find(c => c.id === selectedId);
+    if(!cat) return;
+    cat.title = title;
+    cat.subtitle = subtitle;
+    cat.icon = icon;
+    activeCategory = cat.id;
+  }
+
+  renderCategoryOptions();
+  categoryDialog.close();
+  render();
+});
 
 document.getElementById('exportBtn').onclick=()=>{
   const clone=document.documentElement.cloneNode(true);
@@ -1029,7 +1171,7 @@ document.getElementById('exportBtn').onclick=()=>{
   const blob=new Blob([html],{type:'text/html;charset=utf-8'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download='Teamportal_aktualisiert.html';
+  a.download='index.html';
   a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 };
