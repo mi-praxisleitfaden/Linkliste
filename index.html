@@ -437,7 +437,7 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
 </section>
 
 
-  <div class="filterbar" id="filterbar"><button class="chip active">Alle</button><button class="chip">Organisation</button><button class="chip">Planung und Räume</button><button class="chip">Pädagogik und Zeugnis</button><button class="chip">Unterricht und ICT</button><button class="chip">Regionale Informationen</button><button class="chip">Aktuell</button><button class="chip">Formulare</button></div>
+  <div class="filterbar" id="filterbar"><button class="chip active">Alle</button><button class="chip">Organisation</button><button class="chip">Planung und Räume</button><button class="chip">Pädagogik und Zeugnis</button><button class="chip">Unterricht und ICT</button><button class="chip">Regionale Informationen</button><button class="chip">Aktuell</button></div>
   <section class="grid" id="linkGrid"><article class="category">
       <div class="category-head">
         <div class="category-icon">▦</div>
@@ -634,47 +634,59 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
         <div class="link-tools">
           <button class="icon-btn edit" title="Bearbeiten">✎</button>
           <button class="icon-btn delete" title="Löschen">⌫</button>
-        </div></li></ul></article><article class="category">
-      <div class="category-head">
-        <div class="category-icon">◇</div>
-        <div><h3>Formulare</h3><p></p></div>
-      </div>
-      <ul class="link-list"><li class="link-item">
-        <div class="link-badge">X</div>
-        <div class="link-main">
-          <a href="https://ksabch.sharepoint.com/sites/KSABOSStock666/_layouts/15/Doc.aspx?sourcedoc=%7B9AD40159-2181-48E2-8C9E-090F18AA9B66%7D&amp;file=R%C3%BCckerstattung%20Barauslagen.xlsx&amp;action=default&amp;mobileredirect=true&amp;DefaultItemOpen=1" target="_blank" rel="noopener noreferrer">Rückerstattung Barauslagen</a>
-          <small>https://ksabch.sharepoint.com/sites/KSABOSStock666/_layouts/15/Doc.aspx?sourcedoc=%7B9AD40159-2181-48E2-8C9E-090F18AA9B66%7D&amp;file=R%C3%BCckerstattung%20Barauslagen.xlsx&amp;action=default&amp;mobileredirect=true&amp;DefaultItemOpen=1</small>
-        </div>
-        <div class="link-tools">
-          <button class="icon-btn edit" title="Bearbeiten">✎</button>
-          <button class="icon-btn delete" title="Löschen">⌫</button>
         </div></li></ul></article></section>
   <div class="empty" id="emptyState" style="display: none;">Keine passenden Links gefunden.</div>
 
   <section class="help">
     <h3>Pflege der Seite</h3>
-    <p>Über «Link hinzufügen» oder das Stiftsymbol werden Einträge geändert. Über «Kategorien» lassen sich neue Kategorien anlegen und bestehende Kategorien bearbeiten. «HTML speichern» erzeugt eine neue, vollständige Datei mit allen Änderungen.</p>
+    <p>Über «Link hinzufügen» oder das Stiftsymbol werden Einträge geändert. Für Links und Kategorien können eigene Symbole eingetragen werden. Über «Kategorien» lassen sich neue Kategorien anlegen und bestehende Kategorien bearbeiten. «HTML speichern» erzeugt eine neue, vollständige Datei mit allen Änderungen.</p>
     <p>Die neue Datei ersetzt anschliessend die bisherige Datei auf dem gewählten Webspeicher.</p>
     <div class="notice">Änderungen sind bis zum Speichern nur in diesem Browser vorhanden. Für die gemeinsame Nutzung muss die neu gespeicherte HTML-Datei wieder veröffentlicht werden.</div>
   </section>
 </main>
 
+<datalist id="symbolSuggestions">
+  <option value="★">
+  <option value="✓">
+  <option value="→">
+  <option value="↗">
+  <option value="⌂">
+  <option value="⌘">
+  <option value="▦">
+  <option value="◫">
+  <option value="◎">
+  <option value="⌖">
+  <option value="◷">
+  <option value="📁">
+  <option value="📄">
+  <option value="📚">
+  <option value="📝">
+  <option value="📅">
+  <option value="🔗">
+  <option value="💻">
+  <option value="⚙">
+  <option value="PDF">
+  <option value="W">
+  <option value="X">
+  <option value="P">
+</datalist>
+
 <dialog id="categoryDialog">
   <form method="dialog" id="categoryForm">
     <div class="modal-head">
       <h3>Kategorie hinzufügen oder bearbeiten</h3>
-      <button class="icon-btn" value="cancel" aria-label="Schliessen">✕</button>
+      <button class="icon-btn" type="button" id="closeLinkDialogBtn" aria-label="Schliessen">✕</button>
     </div>
     <div class="modal-body">
       <p class="category-manager-note">Bestehende Kategorie auswählen oder «Neue Kategorie» wählen.</p>
       <div class="form-grid">
         <div class="field full">
           <label for="categoryManagerSelect">Kategorie</label>
-          <select id="categoryManagerSelect" name="categoryManagerSelect"><option value="__new__">＋ Neue Kategorie</option><option value="organisation">Organisation</option><option value="planung">Planung und Räume</option><option value="personal">Pädagogik und Zeugnis</option><option value="unterricht">Unterricht und ICT</option><option value="region">Regionale Informationen</option><option value="aktuell">Aktuell</option></select>
+          <select id="categoryManagerSelect" name="categoryManagerSelect"></select>
         </div>
         <div class="field full">
           <label for="categoryTitle">Titel</label>
-          <input id="categoryTitle" name="categoryTitle" required="" placeholder="z. B. Schulentwicklung">
+          <input id="categoryTitle" name="categoryTitle" required placeholder="z. B. Schulentwicklung">
         </div>
         <div class="field full">
           <label for="categorySubtitle">Kurzbeschreibung</label>
@@ -682,13 +694,13 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
         </div>
         <div class="field">
           <label for="categoryIcon">Symbol</label>
-          <input id="categoryIcon" name="categoryIcon" maxlength="4" placeholder="z. B. ◇">
+          <input id="categoryIcon" name="categoryIcon" maxlength="12" list="symbolSuggestions" placeholder="z. B. ★, 📚, ⌂, MI">
         </div>
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn" value="cancel">Abbrechen</button>
-      <button class="btn btn-primary" id="categorySaveBtn" value="default">Kategorie speichern</button>
+      <button class="btn" type="button" id="cancelCategoryDialogBtn">Abbrechen</button>
+      <button class="btn btn-primary" id="categorySaveBtn" type="submit">Kategorie speichern</button>
     </div>
   </form>
 </dialog>
@@ -696,8 +708,8 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
 <dialog id="linkDialog">
   <form method="dialog" id="linkForm">
     <div class="modal-head">
-      <h3 id="dialogTitle">Link hinzufügen</h3>
-      <button class="icon-btn" value="cancel" aria-label="Schliessen">✕</button>
+      <h3 id="dialogTitle">Link bearbeiten</h3>
+      <button class="icon-btn" type="button" id="closeCategoryDialogBtn" aria-label="Schliessen">✕</button>
     </div>
     <div class="modal-body">
       <div class="form-grid">
@@ -711,7 +723,7 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
         </div>
         <div class="field">
           <label for="category">Bereich</label>
-          <select id="category" name="category"><option value="organisation">Organisation</option><option value="planung">Planung und Räume</option><option value="personal">Pädagogik und Zeugnis</option><option value="unterricht">Unterricht und ICT</option><option value="region">Regionale Informationen</option><option value="aktuell">Aktuell</option><option value="formulare">Formulare</option></select>
+          <select id="category" name="category"><option value="organisation">Organisation</option><option value="planung">Planung und Räume</option><option value="personal">Pädagogik und Zeugnis</option><option value="unterricht">Unterricht und ICT</option><option value="region">Regionale Informationen</option><option value="aktuell">Aktuell</option></select>
         </div>
         <div class="field">
           <label for="type">Typ</label>
@@ -725,6 +737,10 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
             <option value="other">Andere Datei</option>
           </select>
         </div>
+        <div class="field">
+          <label for="symbol">Eigenes Symbol</label>
+          <input id="symbol" name="symbol" maxlength="12" list="symbolSuggestions" placeholder="Optional, z. B. ★, 📄, M">
+        </div>
         <div class="field full">
           <label for="description">Kurzbeschreibung</label>
           <input id="description" name="description" placeholder="Optional">
@@ -732,8 +748,8 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn" value="cancel">Abbrechen</button>
-      <button class="btn btn-primary" id="saveBtn" value="default">Speichern</button>
+      <button class="btn" type="button" id="cancelLinkDialogBtn">Abbrechen</button>
+      <button class="btn btn-primary" id="saveBtn" type="submit">Speichern</button>
     </div>
   </form>
 </dialog>
@@ -776,12 +792,6 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
       "title": "Aktuell",
       "subtitle": "Neuigkeiten und häufig verwendete Inhalte",
       "icon": "◷"
-    },
-    {
-      "id": "formulare",
-      "title": "Formulare",
-      "subtitle": "",
-      "icon": "◇"
     }
   ],
   "links": [
@@ -936,14 +946,6 @@ dialog::backdrop{background:rgba(16,24,40,.52)}
       "category": "unterricht",
       "type": "pdf",
       "description": ""
-    },
-    {
-      "id": "l1786090379646",
-      "title": "Rückerstattung Barauslagen",
-      "url": "https://ksabch.sharepoint.com/sites/KSABOSStock666/_layouts/15/Doc.aspx?sourcedoc=%7B9AD40159-2181-48E2-8C9E-090F18AA9B66%7D&file=R%C3%BCckerstattung%20Barauslagen.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1",
-      "category": "formulare",
-      "type": "excel",
-      "description": ""
     }
   ]
 }
@@ -1088,7 +1090,7 @@ function render(){
       const li=document.createElement('li');
       li.className='link-item';
       li.innerHTML=`
-        <div class="link-badge${link.type==='folder'?' folder-badge':''}">${escapeHtml(typeIcons[link.type]||'□')}</div>
+        <div class="link-badge${link.type==='folder' && !link.symbol?' folder-badge':''}">${escapeHtml(link.symbol || typeIcons[link.type] || '□')}</div>
         <div class="link-main">
           <a href="${escapeHtml(safeUrl(link.url))}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.title)}</a>
           <small>${escapeHtml(link.description||link.url)}</small>
@@ -1121,6 +1123,7 @@ function openEdit(id){
   form.url.value=link.url;
   form.category.value=link.category;
   form.type.value=link.type;
+  form.symbol.value=link.symbol||'';
   form.description.value=link.description||'';
   dialog.showModal();
 }
@@ -1141,6 +1144,7 @@ form.addEventListener('submit',e=>{
     url:fd.get('url').trim(),
     category:fd.get('category'),
     type:fd.get('type'),
+    symbol:fd.get('symbol').trim(),
     description:fd.get('description').trim()
   };
   if(editingId){
@@ -1155,6 +1159,11 @@ form.addEventListener('submit',e=>{
 searchInput.addEventListener('input',render);
 document.getElementById('addBtn').onclick=openAdd;
 document.getElementById('categoryBtn').onclick=openCategoryManager;
+
+document.getElementById('cancelLinkDialogBtn').onclick=()=>dialog.close();
+document.getElementById('closeLinkDialogBtn').onclick=()=>dialog.close();
+document.getElementById('cancelCategoryDialogBtn').onclick=()=>categoryDialog.close();
+document.getElementById('closeCategoryDialogBtn').onclick=()=>categoryDialog.close();
 
 categoryManagerSelect.addEventListener('change', loadCategoryManager);
 
